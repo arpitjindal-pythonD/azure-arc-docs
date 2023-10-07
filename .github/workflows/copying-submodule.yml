@@ -14,7 +14,7 @@ jobs:
       - name: Checkout source repo
         uses: actions/checkout@v2
         with:
-          repository: https://github.com/Azure/arc_jumpstart_docs.git
+          repository: https://github.com/arpitjindal-pythonD/azure-arc-docs.git
           ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Update submodule
