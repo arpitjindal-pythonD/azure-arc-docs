@@ -1,0 +1,27 @@
+name: Copy Source to Submodule
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  copy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source repo
+        uses: actions/checkout@v2
+        with:
+          repository: https://github.com/Azure/arc_jumpstart_docs.git
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Update submodule
+        run: |
+          git submodule update --remote --merge
+          git add .
+          git commit -m "Update submodule to latest"
+          git push origin main
+        working-directory: ${{ github.workspace }}
+
