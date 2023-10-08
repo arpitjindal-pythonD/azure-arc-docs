@@ -1,27 +1,19 @@
-name: Copy Source to Submodule
+name: Trigger Workflow in Repository B
 
 on:
-  pull_request:
-    types:
-      - opened
-      - synchronize
+  push:
+    branches:
+      - main  # Adjust the branch as needed
 
 jobs:
-  copy:
+  dispatch:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source repo
-        uses: actions/checkout@v2
-        with:
-          repository: https://github.com/arpitjindal-pythonD/azure-arc-docs.git
-          ref: ${{ github.event.pull_request.head.ref }}
-
-      - name: Update submodule
+      - name: Trigger Workflow in Repository B
         run: |
-          git submodule update --remote --merge
-          git add .
-          git commit -m "Update submodule to latest"
-          git push origin main
-        working-directory: ${{ github.workspace }}
-
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.REPO2_DISPATCH_TOKEN }}" \
+            -H "Accept: application/vnd.github.everest-preview+json" \
+            -d '{"event_type": "workflow-trigger", "client_payload": {"key": "value"}}' \
+            https://api.github.com/repos/arpitjindal-pythonD/azure-arc-webapp/dispatches
